@@ -243,7 +243,7 @@ function injectEntities() {
             'name': 'entities',
             'value': name + '-radio'
         }).appendTo(row);
-        
+
         $('<label/>', {
             'colorIndex': i,
             'class': 'config-label',
@@ -253,7 +253,7 @@ function injectEntities() {
                 'background-color': colors[i]
             }
         }).appendTo(row);
-        
+
         // Add entity to config panel
         $('#entities').append(row);
     }
@@ -279,7 +279,7 @@ function injectAttributes() {
             }
         }).appendTo(row);
 
-        // Populate datalist with attribute options 
+        // Populate datalist with attribute options
         const datalist = $('<datalist/>', { 'id': id, });
         for (let j = 2; j < attributes[i].length; j++) {
             $('<option/>', {
@@ -290,7 +290,7 @@ function injectAttributes() {
         datalist.appendTo(row);
 
         // Add attribute to config panel
-        row.appendTo('#attribute-dropdowns');        
+        row.appendTo('#attribute-dropdowns');
     }
 }
 
@@ -325,7 +325,7 @@ function styleSelectedEntity() {
         document.getElementById("empty-attributes").style.display = ""
     } else {
         // Style active entity
-        activeEntity = $(this).val();    
+        activeEntity = $(this).val();
         $(this).next().css({
             marginLeft: '5%',
             transition : 'margin 300ms'
@@ -364,7 +364,7 @@ function displayDocumentAnnotations() {
 
     resetAnnotationPanel();
 
-    // Parse and inject annotation data 
+    // Parse and inject annotation data
     for (let i = 0; i < annotations[openDocId].length; i++) {
         const annotationData = getAnnotationData(annotations[openDocId][i], i);
         addAnnotationToDisplay(annotationData);
@@ -428,7 +428,7 @@ function resetAnnotationPanel() {
     // Empty annotation panel (excl. suggestions)
     const suggestions = $('#annotation-suggestion-container').detach();
     $('#annotation-data').empty().append(suggestions);
-    
+
     // Add section titles to annotation panel
     for (let i = 0; i < entities.length; i++) {
         const id = entities[i] + '-section';
@@ -492,7 +492,7 @@ function getSelectionRange(startIndex, endIndex) {
     let endCharIndex = 0;
     for (let i = 0; i < textNodes.length; i++) {
         const textNode = textNodes[i];
-        
+
         endCharIndex = startCharIndex + textNode.length;
 
         // Set start of range
@@ -653,7 +653,7 @@ function constructContentContainer(annotationIndex, attributeValues, isSuggestio
         'annotation-id': annotationIndex,
 
     }).appendTo(contentContainer);
-    
+
     // Create and add buttons
     let buttonTypes = isSuggestion ? ['reject', 'accept'] : ['delete'];
     for (let i = 0; i < buttonTypes.length; i++) {
@@ -820,7 +820,7 @@ function bindAnnotationEvents() {
         updateAnnotationOnHover(e.target.id, 'annotation-data');
     });
 
-    // Suggest ontology matches based on selected text 
+    // Suggest ontology matches based on selected text
     $('#file-data').mouseup({
         'type': 'highlight'
     }, suggestOntologyMapping);
@@ -871,7 +871,7 @@ function highlightSuggestionText(suggestionText) {
     const suggestionIndex = updatedHTML.indexOf(suggestionText);
 
     // Highlight suggestion in html
-    if (suggestionIndex > -1) { 
+    if (suggestionIndex > -1) {
         $('#file-data').html(
             updatedHTML.substring(0, suggestionIndex) +
             '<span class="highlighted-suggestion">' + suggestionText + '</span>' +
@@ -891,7 +891,7 @@ function selectAnnotationText() {
 
 function resetSelectedText() {
     // Reset session
-    $('#highlighted').replaceWith(function () { return this.innerHTML; });            
+    $('#highlighted').replaceWith(function () { return this.innerHTML; });
     if ($('#highlighted')[0] != null) {
         setupSession(isNewSession=false);
     }
@@ -969,7 +969,7 @@ function isValidAnnotation(selectionText) {
     return validEntity && validSelection;
 }
 
-function constructManualAnnotation(selectionText, selectionLength, preSelectionLength) {   
+function constructManualAnnotation(selectionText, selectionLength, preSelectionLength) {
     const annotation = [];
 
     // Convert highlight indicies to CRLF / LF indicies
@@ -994,8 +994,8 @@ function constructManualAnnotation(selectionText, selectionLength, preSelectionL
     // Add formatted annotation to global array
     addFormattedAnnotation(annotation, startIndex);
 
-    // TODO feedback manual annoation into models 
-    // updateSuggestionModels(entityValue, selectionText, 'positive');      
+    // TODO feedback manual annoation into models
+    // updateSuggestionModels(entityValue, selectionText, 'positive');
 }
 
 function getFormattedEntity(selectionText, startIndex, endIndex) {
@@ -1071,7 +1071,7 @@ function addFormattedAnnotation(annotation, startIndex) {
 
     if (annotations[openDocId].length == 0) {
         annotations[openDocId].push(annotation);
-    } else {        
+    } else {
         // Add annotation in order as it appears in doc
         for (let i = 0; i < annotations[openDocId].length; i++) {
             if (startIndex < parseInt(annotations[openDocId][i][0][0].split(' ')[1])) {
@@ -1222,7 +1222,7 @@ function updateHoverData(id, annotationIndex) {
 }
 
 function resetAnnotationEvents() {
-    $('#file-data').unbind();    
+    $('#file-data').unbind();
     $('.collapsible').unbind();
     $('#annotation-data').unbind();
     $('#ontology-search-input-field').unbind();
@@ -1244,14 +1244,14 @@ function suggestDocumentAnnotations() {
     const openDocId = localStorage.getItem('openDocId');
     const docText = localStorage.getItem('docText' + openDocId);
     const annotationTexts = getAnnotationTexts(openDocId);
-    
+
     // Reset list and display loader
     prepareSuggestionPanel();
 
     $.ajax({
         type: 'POST',
         url: 'suggest-annotations/',
-        data: { 
+        data: {
             'docText': docText,
             'annotationTexts': JSON.stringify(annotationTexts)
         }, success: function (response) {
@@ -1263,7 +1263,7 @@ function suggestDocumentAnnotations() {
             }
         }
     }).done(function () {
-        // Add events to suggestions 
+        // Add events to suggestions
         bindAnnotationEvents();
     });
 }
@@ -1347,7 +1347,7 @@ function selectSuggestionAttributes(suggestion) {
     for (let i = 0; i < dropdowns.length; i++) {
         const attributeType = dropdowns[i].getAttribute('list');
         const attributeName = attributeType.slice(0, attributeType.length - 12);
-        
+
         if (attributeType.indexOf('Prescription') > -1) {
             dropdowns[i].value = suggestion.getAttribute(attributeName);
         }
@@ -1384,8 +1384,8 @@ function rejectAnnotation(element) {
 
     removeSuggestion(suggestion, suggestionId);
     decrementSuggestionCount();
-    
-    // TODO Feedback into models 
+
+    // TODO Feedback into models
     updateSuggestionModels('prescription', suggestion.innerText, 'negative');
 }
 
